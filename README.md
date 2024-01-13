@@ -1,6 +1,6 @@
 # CSV-to-Database Tool
 
-**Welcome to the [CSV-to-Database Tool](https://csv-to-database-rogiclwge-curlgpt.vercel.app/)**, a user-friendly No Code solution designed for non-technical individuals to effortlessly convert CSV files into SQL Databases Table within seconds. 🚀
+**Welcome to the [CSV-to-Database Tool](https://csv-to-database.vercel.app/)**, a user-friendly No Code solution designed for non-technical individuals to effortlessly convert CSV files into SQL Databases Table within seconds. 🚀
 
 ## Features:
 
