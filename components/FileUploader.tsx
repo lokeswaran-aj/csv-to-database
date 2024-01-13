@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { parse } from "papaparse";
 import { useState } from "react";
 import DatabaseTable from "./DatabaseTable";
+import ColumnMapping from "./ColumnMapping";
 
 const InputFile = () => {
     const [csvData, setCsvData] = useState<string[]>([]);
@@ -28,14 +29,14 @@ const InputFile = () => {
             dynamicTyping: true,
             complete: (results: any) => {
                 setCsvDataHeaders(results.meta.fields);
-                setCsvData(results.data);
+                // setCsvData(results.data);
             },
         });
     };
 
     return (
         <>
-            <div className="grid w-full max-w-sm items-center gap-1.5">
+            <div className="grid w-full max-w-sm items-center gap-1.5 my-4">
                 <Label htmlFor="csv">Upload your csv file</Label>
                 <Input
                     id="csv"
@@ -43,6 +44,10 @@ const InputFile = () => {
                     onChange={(e) => handleFileUpload(e)}
                 />
             </div>
+
+            {csvDataHeaders.length > 0 && (
+                <ColumnMapping columns={csvDataHeaders} />
+            )}
 
             {csvData.length > 0 && (
                 <DatabaseTable headers={csvDataHeaders} csvData={csvData} />
