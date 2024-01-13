@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 
 interface ColumnMappingProps {
     columns: string[];
+    createDataWithNewColumns: () => void;
     inputCount: number;
     setInputCount: Dispatch<SetStateAction<number>>;
     setIsMapped: Dispatch<SetStateAction<boolean>>;
@@ -18,6 +19,7 @@ interface ColumnMappingProps {
 }
 interface ColumnSelectProps {
     columns: string[];
+    createDataWithNewColumns: () => void;
     inputCount: number;
     setInputCount: Dispatch<SetStateAction<number>>;
     setIsMapped: Dispatch<SetStateAction<boolean>>;
@@ -34,6 +36,7 @@ const ColumnMapping: FC<ColumnMappingProps> = ({
     inputCount,
     setInputCount,
     setNewColumns,
+    createDataWithNewColumns,
 }) => {
     return (
         <>
@@ -57,6 +60,7 @@ const ColumnMapping: FC<ColumnMappingProps> = ({
                 setInputCount={setInputCount}
                 setIsMapped={setIsMapped}
                 setNewColumns={setNewColumns}
+                createDataWithNewColumns={createDataWithNewColumns}
             />
         </>
     );
@@ -68,6 +72,7 @@ const ColumnSelect: FC<ColumnSelectProps> = ({
     setInputCount,
     setIsMapped,
     setNewColumns,
+    createDataWithNewColumns,
 }) => {
     const options = columns.map((column) => ({ label: column, value: column }));
 
@@ -114,6 +119,7 @@ const ColumnSelect: FC<ColumnSelectProps> = ({
                 onClick={() => {
                     setInputCount(0);
                     setIsMapped(true);
+                    createDataWithNewColumns();
                 }}
             >
                 Create Database

@@ -41,6 +41,33 @@ const InputFile = () => {
         });
     };
 
+    const createDataWithNewColumns = () => {
+        var headers: string[] = [];
+        var mapping: { [key: string]: string[] } = {};
+        Object.values(newColumns).map((newColumn) => {
+            const tempColumn = newColumn.shift();
+            headers.push(tempColumn);
+            mapping[tempColumn] = [];
+            newColumn.map((item: any) => {
+                mapping[tempColumn].push(item.value);
+            });
+        });
+        var tempData: any[] = [];
+        var tempRowData = {};
+        setCsvDataHeaders(headers);
+        csvData.map((rowData) => {
+            for (let i = 0; i < headers.length; i++) {
+                const key = headers[i];
+                var tempValue = "";
+                tempValue += mapping[key].map((col) => rowData[col]).join(" ");
+                tempRowData[key] = tempValue;
+            }
+            tempData.push(tempRowData);
+            tempRowData = {};
+        });
+        setCsvData(tempData);
+    };
+
     return (
         <>
             <div className="grid w-full max-w-sm items-center gap-1.5 my-4">
@@ -59,6 +86,7 @@ const InputFile = () => {
                     inputCount={inputCount}
                     setInputCount={setInputCount}
                     setNewColumns={setNewColumns}
+                    createDataWithNewColumns={createDataWithNewColumns}
                 />
             )}
 
