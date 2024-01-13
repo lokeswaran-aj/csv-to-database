@@ -9,6 +9,13 @@ import ColumnMapping from "./ColumnMapping";
 const InputFile = () => {
     const [csvData, setCsvData] = useState<string[]>([]);
     const [csvDataHeaders, setCsvDataHeaders] = useState<string[]>([]);
+    const [isMapped, setIsMapped] = useState(false);
+    const [inputCount, setInputCount] = useState(0);
+    const defaultColumns: { [key: number]: any } = {};
+    for (let i = 0; i < inputCount; i++) {
+        defaultColumns[i] = [];
+    }
+    const [newColumns, setNewColumns] = useState(defaultColumns);
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -29,7 +36,7 @@ const InputFile = () => {
             dynamicTyping: true,
             complete: (results: any) => {
                 setCsvDataHeaders(results.meta.fields);
-                // setCsvData(results.data);
+                setCsvData(results.data);
             },
         });
     };
@@ -45,11 +52,17 @@ const InputFile = () => {
                 />
             </div>
 
-            {csvDataHeaders.length > 0 && (
-                <ColumnMapping columns={csvDataHeaders} />
+            {csvDataHeaders.length > 0 && !isMapped && (
+                <ColumnMapping
+                    columns={csvDataHeaders}
+                    setIsMapped={setIsMapped}
+                    inputCount={inputCount}
+                    setInputCount={setInputCount}
+                    setNewColumns={setNewColumns}
+                />
             )}
 
-            {csvData.length > 0 && (
+            {isMapped && csvData.length > 0 && (
                 <DatabaseTable headers={csvDataHeaders} csvData={csvData} />
             )}
         </>

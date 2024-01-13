@@ -1,19 +1,40 @@
 "use client";
-import { FC, useState } from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Select from "react-select";
+import Select, { MultiValue } from "react-select";
+import { Button } from "@/components/ui/button";
 
 interface ColumnMappingProps {
     columns: string[];
+    inputCount: number;
+    setInputCount: Dispatch<SetStateAction<number>>;
+    setIsMapped: Dispatch<SetStateAction<boolean>>;
+    setNewColumns: Dispatch<
+        SetStateAction<{
+            [key: number]: any;
+        }>
+    >;
 }
 interface ColumnSelectProps {
     columns: string[];
     inputCount: number;
+    setInputCount: Dispatch<SetStateAction<number>>;
+    setIsMapped: Dispatch<SetStateAction<boolean>>;
+    setNewColumns: Dispatch<
+        SetStateAction<{
+            [key: number]: any;
+        }>
+    >;
 }
 
-const ColumnMapping: FC<ColumnMappingProps> = ({ columns }) => {
-    const [inputCount, setInputCount] = useState(0);
+const ColumnMapping: FC<ColumnMappingProps> = ({
+    columns,
+    setIsMapped,
+    inputCount,
+    setInputCount,
+    setNewColumns,
+}) => {
     return (
         <>
             <div className="grid w-full max-w-sm items-center gap-1.5 my-4">
@@ -30,15 +51,25 @@ const ColumnMapping: FC<ColumnMappingProps> = ({ columns }) => {
                     }}
                 />
             </div>
-            <ColumnSelect inputCount={inputCount} columns={columns} />
+            <ColumnSelect
+                inputCount={inputCount}
+                columns={columns}
+                setInputCount={setInputCount}
+                setIsMapped={setIsMapped}
+                setNewColumns={setNewColumns}
+            />
         </>
     );
 };
 
-const ColumnSelect: FC<ColumnSelectProps> = ({ columns, inputCount }) => {
+const ColumnSelect: FC<ColumnSelectProps> = ({
+    columns,
+    inputCount,
+    setInputCount,
+    setIsMapped,
+    setNewColumns,
+}) => {
     const options = columns.map((column) => ({ label: column, value: column }));
-    const [selected, setSelected] = useState([]);
-    console.log(selected);
 
     return (
         <>
@@ -52,17 +83,41 @@ const ColumnSelect: FC<ColumnSelectProps> = ({ columns, inputCount }) => {
                             type="text"
                             id={`columnn${index}`}
                             placeholder="First Name"
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                setNewColumns((prevState) => ({
+                                    ...prevState,
+                                    [index]: [value],
+                                }));
+                            }}
                         />
                     </div>
                     <Select
+                        form=""
                         isMulti
                         name="colors"
                         options={options}
-                        className="basic-multi-select"
-                        classNamePrefix="select"
+                        onChange={(selectedOptions) =>
+                            setNewColumns((prevState) => ({
+                                ...prevState,
+                                [index]: [
+                                    prevState[index][0],
+                                    ...selectedOptions,
+                                ],
+                            }))
+                        }
                     />
                 </div>
             ))}
+            <Button
+                variant="default"
+                onClick={() => {
+                    setInputCount(0);
+                    setIsMapped(true);
+                }}
+            >
+                Create Database
+            </Button>
         </>
     );
 };
