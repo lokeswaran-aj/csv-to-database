@@ -7,7 +7,7 @@ import DatabaseTable from "./DatabaseTable";
 import ColumnMapping from "./ColumnMapping";
 
 const InputFile = () => {
-    const [csvData, setCsvData] = useState<string[]>([]);
+    const [csvData, setCsvData] = useState<{ [key: string]: any }[]>([]);
     const [csvDataHeaders, setCsvDataHeaders] = useState<string[]>([]);
     const [isMapped, setIsMapped] = useState(false);
     const [inputCount, setInputCount] = useState(0);
@@ -53,7 +53,7 @@ const InputFile = () => {
             });
         });
         var tempData: any[] = [];
-        var tempRowData = {};
+        var tempRowData: { [key: string]: any } = {};
         setCsvDataHeaders(headers);
         csvData.map((rowData) => {
             for (let i = 0; i < headers.length; i++) {
