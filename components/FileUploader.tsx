@@ -5,8 +5,11 @@ import { parse } from "papaparse";
 import { useState } from "react";
 import DatabaseTable from "./DatabaseTable";
 import ColumnMapping from "./ColumnMapping";
+import useDataStore from "@/lib/DataStore";
 
 const InputFile = () => {
+    const { headers, addHeaders, data, putData } = useDataStore();
+
     const [csvData, setCsvData] = useState<{ [key: string]: any }[]>([]);
     const [csvDataHeaders, setCsvDataHeaders] = useState<string[]>([]);
     const [isMapped, setIsMapped] = useState(false);
@@ -42,22 +45,25 @@ const InputFile = () => {
     };
 
     const createDataWithNewColumns = () => {
-        var headers: string[] = [];
+        var tempHeaders: string[] = [];
         var mapping: { [key: string]: string[] } = {};
         Object.values(newColumns).map((newColumn) => {
-            const tempColumn = newColumn.shift();
-            headers.push(tempColumn);
+            const tempColumn: string = newColumn.shift();
+            tempHeaders.push(tempColumn);
+            addHeaders(
+                tempColumn.charAt(0).toUpperCase() + tempColumn.slice(1)
+            );
             mapping[tempColumn] = [];
             newColumn.map((item: any) => {
                 mapping[tempColumn].push(item.value);
             });
         });
+
         var tempData: any[] = [];
         var tempRowData: { [key: string]: any } = {};
-        setCsvDataHeaders(headers);
         csvData.map((rowData) => {
-            for (let i = 0; i < headers.length; i++) {
-                const key = headers[i];
+            for (let i = 0; i < tempHeaders.length; i++) {
+                const key = tempHeaders[i];
                 var tempValue = "";
                 tempValue += mapping[key].map((col) => rowData[col]).join(" ");
                 tempRowData[key] = tempValue;
@@ -65,7 +71,8 @@ const InputFile = () => {
             tempData.push(tempRowData);
             tempRowData = {};
         });
-        setCsvData(tempData);
+
+        putData(tempData);
     };
 
     return (
@@ -90,8 +97,8 @@ const InputFile = () => {
                 />
             )}
 
-            {isMapped && csvData.length > 0 && (
-                <DatabaseTable headers={csvDataHeaders} csvData={csvData} />
+            {isMapped && data.length > 0 && (
+                <DatabaseTable headers={headers} csvData={data} />
             )}
         </>
     );
