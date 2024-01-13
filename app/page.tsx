@@ -1,5 +1,4 @@
-import { InputFile } from "@/components/FileUploader";
-import Image from "next/image";
+import InputFile from "@/components/FileUploader";
 
 export default function Home() {
     return (

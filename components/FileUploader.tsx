@@ -1,21 +1,36 @@
 "use client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { parse } from "papaparse";
 import { useState } from "react";
+import DatabaseTable from "./DatabaseTable";
 
-export function InputFile() {
-    const [csvData, setCsvData] = useState<string>("");
+const InputFile = () => {
+    const [csvData, setCsvData] = useState<string[]>([]);
+    const [csvDataHeaders, setCsvDataHeaders] = useState<string[]>([]);
+
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
             const reader = new FileReader();
             reader.onload = (file) => {
                 const result = file.target?.result;
-                if (typeof result === "string") setCsvData(result);
+                if (typeof result === "string") parseCSV(result);
             };
             reader.readAsText(e.target.files[0]);
         } else {
             console.log("No file");
         }
+    };
+
+    const parseCSV = (csvData: string) => {
+        parse(csvData, {
+            header: true,
+            dynamicTyping: true,
+            complete: (results: any) => {
+                setCsvDataHeaders(results.meta.fields);
+                setCsvData(results.data);
+            },
+        });
     };
 
     return (
@@ -28,7 +43,12 @@ export function InputFile() {
                     onChange={(e) => handleFileUpload(e)}
                 />
             </div>
-            {csvData}
+
+            {csvData.length > 0 && (
+                <DatabaseTable headers={csvDataHeaders} csvData={csvData} />
+            )}
         </>
     );
-}
+};
+
+export default InputFile;
