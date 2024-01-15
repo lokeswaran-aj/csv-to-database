@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface Data {
+export interface Data {
     [key: string]: string | number | boolean;
 }
 
@@ -9,19 +9,31 @@ interface IDataStore {
     addHeaders: (header: string) => void;
     data: Data[];
     putData: (newData: Data[]) => void;
+    csvData: Data[];
+    putCsvData: (newData: Data[]) => void;
+    IsMapped: boolean;
+    updateIsMapped: (mappingStatus: boolean) => void;
 }
 
 const useDataStore = create<IDataStore>((set) => ({
     headers: [],
     data: [],
+    csvData: [],
+    IsMapped: false,
     addHeaders: (header: string) =>
         set((state) => ({
             headers: [...state.headers, header],
         })),
     putData: (newData: Data[]) =>
-        set((state) => ({
+        set(() => ({
             data: [...newData],
         })),
+    putCsvData: (newData: Data[]) =>
+        set(() => ({
+            csvData: [...newData],
+        })),
+    updateIsMapped: (mappingStatus: boolean) =>
+        set(() => ({ IsMapped: mappingStatus })),
 }));
 
 export default useDataStore;
