@@ -7,13 +7,11 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import useDataStore from "@/lib/DataStore";
 
-interface DatabaseTableProps {
-    headers: string[];
-    csvData: any[];
-}
-
-const DatabaseTable: FC<DatabaseTableProps> = ({ headers, csvData }) => {
+const DatabaseTable = () => {
+    const { headers, data } = useDataStore();
+    if (data.length === 0) return <div>Loading...</div>;
     return (
         <div className="my-4">
             <Table>
@@ -33,7 +31,7 @@ const DatabaseTable: FC<DatabaseTableProps> = ({ headers, csvData }) => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {csvData.map((rowData, index: number) => (
+                    {data.map((rowData, index: number) => (
                         <TableRow key={index}>
                             <TableCell className="border-2" key={index}>
                                 {index + 1}

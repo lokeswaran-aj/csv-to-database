@@ -1,17 +1,18 @@
+"use server";
+import { throws } from "assert";
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+const getJsonData = async (dataStructure: string, csvString: string) => {
+    const apiKey = process.env["OPENAI_API_KEY"];
 
-const getJsonData = async (dataStructure: any, csvString: string) => {
+    const openai = new OpenAI({ apiKey: apiKey });
     const response = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [
             {
                 role: "system",
                 content:
-                    "You are a csv to JSON covering expert. The inputs are a CSV data and a data structure. You have to generate a one-line JSON with '```json```'. Rules: 1. concatenate() method should concatenate the source column values in the CSV.2. duplicate() should create duplicate rows for each source column's value in the CSV",
+                    "You are a csv to JSON covering expert. The inputs are a CSV data and a data structure. You have to generate a JSON from the csv within ```json```. Rules: 1. concatenate() method should concatenate the source column values in the CSV.2. duplicate() should create duplicate rows for each source column's value in the CSV",
             },
             {
                 role: "system",
@@ -28,9 +29,26 @@ const getJsonData = async (dataStructure: any, csvString: string) => {
             },
         ],
     });
-    console.log("====================================");
-    console.log("Response:", response.choices[0].message);
-    console.log("====================================");
+    console.log("Response:", response.choices[0].message.content);
+    let regex = /```json\s*([\s\S]+?)\s*```/;
+
+    let match = response.choices[0].message.content?.match(regex);
+    if (!match) regex = /```\s*([\s\S]+?)\s*```/;
+    match = response.choices[0].message.content?.match(regex);
+
+    if (match) {
+        const jsonString = match[1];
+
+        try {
+            return JSON.parse(jsonString);
+        } catch (error: any) {
+            console.error("Error parsing JSON:", error.message);
+        }
+    } else {
+        throw new Error(
+            "Proper response was not returned from OpenAI. Retry by uploading again."
+        );
+    }
 };
 
 export default getJsonData;

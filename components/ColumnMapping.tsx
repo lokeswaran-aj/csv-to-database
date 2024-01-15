@@ -3,7 +3,7 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import MultiSelect from "react-select";
-import { Button } from "@/components/ui/button";
+
 import {
     Select,
     SelectContent,
@@ -12,8 +12,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import useDataStore from "@/lib/DataStore";
-import prepareDataForOpenAI from "@/lib/prepare-data";
+import CreateDatabase from "./CreateDatabase";
 
 interface ColumnMappingProps {
     columns: string[];
@@ -57,7 +56,6 @@ const ColumnSelect: FC<ColumnSelectProps> = ({
     inputCount,
     setInputCount,
 }) => {
-    const { addHeaders, updateIsMapped } = useDataStore();
     const options = columns.map((column) => ({ label: column, value: column }));
     const [newColumns, setNewColumns] = useState<{ [key: string]: any }[]>([]);
     useEffect(() => {
@@ -147,16 +145,10 @@ const ColumnSelect: FC<ColumnSelectProps> = ({
                         )}
                 </div>
             ))}
-            <Button
-                variant="default"
-                onClick={() => {
-                    setInputCount(0);
-                    updateIsMapped(true);
-                    prepareDataForOpenAI(newColumns, addHeaders);
-                }}
-            >
-                Create Database
-            </Button>
+            <CreateDatabase
+                setInputCount={setInputCount}
+                newColumns={newColumns}
+            />
         </>
     );
 };

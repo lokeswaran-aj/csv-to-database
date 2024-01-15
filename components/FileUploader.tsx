@@ -54,9 +54,7 @@ const InputFile = () => {
                 <ColumnMapping columns={csvDataHeaders} />
             )}
 
-            {IsMapped && data.length > 0 && (
-                <DatabaseTable headers={headers} csvData={data} />
-            )}
+            {IsMapped && <DatabaseTable />}
         </>
     );
 };

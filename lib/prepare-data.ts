@@ -1,8 +1,11 @@
+import getJsonData from "./CSV-to-JSON";
 import { Data } from "./DataStore";
 
-const prepareDataForOpenAI = (
+const prepareDataForOpenAI = async (
     newColumns: { [key: number]: any },
-    addHeaders: (header: string) => void
+    addHeaders: (header: string) => void,
+    csvData: string,
+    putData: (newData: Data[]) => void
 ) => {
     var mapping: { [key: string]: string[] } = {};
     for (const index in newColumns) {
@@ -23,6 +26,8 @@ const prepareDataForOpenAI = (
         }
         mapping[dest] = source;
     }
+    const data = await getJsonData(JSON.stringify(mapping), csvData);
+    putData(data);
 };
 
 export default prepareDataForOpenAI;
