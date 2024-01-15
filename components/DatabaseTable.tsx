@@ -15,12 +15,17 @@ interface DatabaseTableProps {
 
 const DatabaseTable: FC<DatabaseTableProps> = ({ headers, csvData }) => {
     return (
-        <div className="my-4 border rounded-md">
+        <div className="my-4">
             <Table>
                 <TableHeader>
                     <TableRow>
                         {headers.map((head: string, index: number) => (
-                            <TableHead key={index}>{head}</TableHead>
+                            <TableHead
+                                className="border bg-slate-500 text-slate-50"
+                                key={index}
+                            >
+                                {head}
+                            </TableHead>
                         ))}
                     </TableRow>
                 </TableHeader>
@@ -29,7 +34,7 @@ const DatabaseTable: FC<DatabaseTableProps> = ({ headers, csvData }) => {
                         <TableRow key={index}>
                             {Object.keys(rowData).map(
                                 (k: any, index: number) => (
-                                    <TableCell key={index}>
+                                    <TableCell className="border" key={index}>
                                         {rowData[k]}
                                     </TableCell>
                                 )
