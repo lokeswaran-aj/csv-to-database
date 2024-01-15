@@ -27,12 +27,9 @@ const prepareDataForOpenAI = async (
         }
         mapping[dest] = source;
     }
-    const data = await getJsonData(
-        JSON.stringify(mapping),
-        csvData,
-        updateIsMapped
-    );
-    if (data) putData(data);
+    const data = await getJsonData(JSON.stringify(mapping), csvData);
+    if (data.length > 0) putData(data);
+    else updateIsMapped(false);
 };
 
 export default prepareDataForOpenAI;
