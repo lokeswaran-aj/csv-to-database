@@ -19,9 +19,12 @@ const DatabaseTable: FC<DatabaseTableProps> = ({ headers, csvData }) => {
             <Table>
                 <TableHeader>
                     <TableRow>
+                        <TableHead className="border-2 bg-slate-500 text-slate-50">
+                            ID
+                        </TableHead>
                         {headers.map((head: string, index: number) => (
                             <TableHead
-                                className="border bg-slate-500 text-slate-50"
+                                className="border-2 bg-slate-500 text-slate-50"
                                 key={index}
                             >
                                 {head}
@@ -32,9 +35,12 @@ const DatabaseTable: FC<DatabaseTableProps> = ({ headers, csvData }) => {
                 <TableBody>
                     {csvData.map((rowData, index: number) => (
                         <TableRow key={index}>
+                            <TableCell className="border-2" key={index}>
+                                {index + 1}
+                            </TableCell>
                             {Object.keys(rowData).map(
                                 (k: any, index: number) => (
-                                    <TableCell className="border" key={index}>
+                                    <TableCell className="border-2" key={index}>
                                         {rowData[k]}
                                     </TableCell>
                                 )
