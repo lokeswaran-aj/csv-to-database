@@ -8,19 +8,14 @@ import ColumnMapping from "./ColumnMapping";
 import useDataStore from "@/lib/DataStore";
 
 const InputFile = () => {
-    const { headers, addHeaders, data, putData } = useDataStore();
+    const { headers, data, putCsvData, IsMapped, updateIsMapped } =
+        useDataStore();
 
-    const [csvData, setCsvData] = useState<{ [key: string]: any }[]>([]);
     const [csvDataHeaders, setCsvDataHeaders] = useState<string[]>([]);
-    const [isMapped, setIsMapped] = useState(false);
-    const [inputCount, setInputCount] = useState(0);
-    const defaultColumns: { [key: number]: any } = {};
-    for (let i = 0; i < inputCount; i++) {
-        defaultColumns[i] = [];
-    }
-    const [newColumns, setNewColumns] = useState(defaultColumns);
 
     const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        updateIsMapped(false);
+        setCsvDataHeaders([]);
         if (e.target.files && e.target.files.length > 0) {
             const reader = new FileReader();
             reader.onload = (file) => {
@@ -33,46 +28,15 @@ const InputFile = () => {
         }
     };
 
-    const parseCSV = (csvData: string) => {
-        parse(csvData, {
+    const parseCSV = (result: string) => {
+        parse(result, {
             header: true,
             dynamicTyping: true,
             complete: (results: any) => {
                 setCsvDataHeaders(results.meta.fields);
-                setCsvData(results.data);
+                putCsvData(results.data);
             },
         });
-    };
-
-    const createDataWithNewColumns = () => {
-        var tempHeaders: string[] = [];
-        var mapping: { [key: string]: string[] } = {};
-        Object.values(newColumns).map((newColumn) => {
-            const tempColumn: string = newColumn.shift();
-            tempHeaders.push(tempColumn);
-            addHeaders(
-                tempColumn.charAt(0).toUpperCase() + tempColumn.slice(1)
-            );
-            mapping[tempColumn] = [];
-            newColumn.map((item: any) => {
-                mapping[tempColumn].push(item.value);
-            });
-        });
-
-        var tempData: any[] = [];
-        var tempRowData: { [key: string]: any } = {};
-        csvData.map((rowData) => {
-            for (let i = 0; i < tempHeaders.length; i++) {
-                const key = tempHeaders[i];
-                var tempValue = "";
-                tempValue += mapping[key].map((col) => rowData[col]).join(" ");
-                tempRowData[key] = tempValue;
-            }
-            tempData.push(tempRowData);
-            tempRowData = {};
-        });
-
-        putData(tempData);
     };
 
     return (
@@ -86,18 +50,11 @@ const InputFile = () => {
                 />
             </div>
 
-            {csvDataHeaders.length > 0 && !isMapped && (
-                <ColumnMapping
-                    columns={csvDataHeaders}
-                    setIsMapped={setIsMapped}
-                    inputCount={inputCount}
-                    setInputCount={setInputCount}
-                    setNewColumns={setNewColumns}
-                    createDataWithNewColumns={createDataWithNewColumns}
-                />
+            {csvDataHeaders.length > 0 && !IsMapped && (
+                <ColumnMapping columns={csvDataHeaders} />
             )}
 
-            {isMapped && data.length > 0 && (
+            {IsMapped && data.length > 0 && (
                 <DatabaseTable headers={headers} csvData={data} />
             )}
         </>

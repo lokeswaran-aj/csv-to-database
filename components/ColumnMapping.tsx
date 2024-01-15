@@ -2,42 +2,30 @@
 import { Dispatch, FC, SetStateAction, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Select, { MultiValue } from "react-select";
+import MultiSelect from "react-select";
 import { Button } from "@/components/ui/button";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import useDataStore from "@/lib/DataStore";
+import prepareDataForOpenAI from "@/lib/prepare-data";
 
 interface ColumnMappingProps {
     columns: string[];
-    createDataWithNewColumns: () => void;
-    inputCount: number;
-    setInputCount: Dispatch<SetStateAction<number>>;
-    setIsMapped: Dispatch<SetStateAction<boolean>>;
-    setNewColumns: Dispatch<
-        SetStateAction<{
-            [key: number]: any;
-        }>
-    >;
 }
 interface ColumnSelectProps {
     columns: string[];
-    createDataWithNewColumns: () => void;
     inputCount: number;
     setInputCount: Dispatch<SetStateAction<number>>;
-    setIsMapped: Dispatch<SetStateAction<boolean>>;
-    setNewColumns: Dispatch<
-        SetStateAction<{
-            [key: number]: any;
-        }>
-    >;
 }
 
-const ColumnMapping: FC<ColumnMappingProps> = ({
-    columns,
-    setIsMapped,
-    inputCount,
-    setInputCount,
-    setNewColumns,
-    createDataWithNewColumns,
-}) => {
+const ColumnMapping: FC<ColumnMappingProps> = ({ columns }) => {
+    const [inputCount, setInputCount] = useState(0);
     return (
         <>
             <div className="grid w-full max-w-sm items-center gap-1.5 my-4">
@@ -58,9 +46,6 @@ const ColumnMapping: FC<ColumnMappingProps> = ({
                 inputCount={inputCount}
                 columns={columns}
                 setInputCount={setInputCount}
-                setIsMapped={setIsMapped}
-                setNewColumns={setNewColumns}
-                createDataWithNewColumns={createDataWithNewColumns}
             />
         </>
     );
@@ -70,11 +55,14 @@ const ColumnSelect: FC<ColumnSelectProps> = ({
     columns,
     inputCount,
     setInputCount,
-    setIsMapped,
-    setNewColumns,
-    createDataWithNewColumns,
 }) => {
+    const { addHeaders, putData, updateIsMapped, csvData } = useDataStore();
     const options = columns.map((column) => ({ label: column, value: column }));
+    const defaultColumns: { [key: number]: any } = {};
+    for (let i = 0; i < inputCount; i++) {
+        defaultColumns[i] = [];
+    }
+    const [newColumns, setNewColumns] = useState(defaultColumns);
 
     return (
         <>
@@ -97,15 +85,12 @@ const ColumnSelect: FC<ColumnSelectProps> = ({
                             }}
                         />
                     </div>
-                    <div className="ml-5">
-                        <Label
-                            htmlFor={`source${index}`}
-                            className="block !pt-4 pb-1"
-                        >
+                    <div className="ml-5 grid w-full max-w-sm items-center gap-1.5 my-4">
+                        <Label htmlFor={`source${index}`}>
                             Choose source column:
                         </Label>
                         <div>
-                            <Select
+                            <MultiSelect
                                 id={`source${index}`}
                                 isMulti
                                 name="colors"
@@ -122,14 +107,41 @@ const ColumnSelect: FC<ColumnSelectProps> = ({
                             />
                         </div>
                     </div>
+                    <div className="ml-5 grid w-full max-w-sm items-center gap-1.5 my-4">
+                        <Label>Handle Multiple source:</Label>
+                        <Select
+                            onValueChange={(selectedFunction) =>
+                                console.log(selectedFunction)
+                            }
+                        >
+                            <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="Choose an option" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectGroup>
+                                    <SelectItem value="contatinate">
+                                        Contatinate
+                                    </SelectItem>
+                                    <SelectItem value="cuplicate">
+                                        Duplicate data
+                                    </SelectItem>
+                                </SelectGroup>
+                            </SelectContent>
+                        </Select>
+                    </div>
                 </div>
             ))}
             <Button
                 variant="default"
                 onClick={() => {
                     setInputCount(0);
-                    setIsMapped(true);
-                    createDataWithNewColumns();
+                    updateIsMapped(true);
+                    prepareDataForOpenAI(
+                        newColumns,
+                        csvData,
+                        addHeaders,
+                        putData
+                    );
                 }}
             >
                 Create Database
