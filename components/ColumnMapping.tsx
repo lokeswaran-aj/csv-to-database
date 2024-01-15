@@ -1,5 +1,5 @@
 "use client";
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import MultiSelect from "react-select";
@@ -25,7 +25,8 @@ interface ColumnSelectProps {
 }
 
 const ColumnMapping: FC<ColumnMappingProps> = ({ columns }) => {
-    const [inputCount, setInputCount] = useState(0);
+    const [inputCount, setInputCount] = useState<number>(0);
+
     return (
         <>
             <div className="grid w-full max-w-sm items-center gap-1.5 my-4">
@@ -56,13 +57,20 @@ const ColumnSelect: FC<ColumnSelectProps> = ({
     inputCount,
     setInputCount,
 }) => {
-    const { addHeaders, putData, updateIsMapped, csvData } = useDataStore();
+    const { addHeaders, updateIsMapped } = useDataStore();
     const options = columns.map((column) => ({ label: column, value: column }));
-    const defaultColumns: { [key: number]: any } = {};
-    for (let i = 0; i < inputCount; i++) {
-        defaultColumns[i] = [];
-    }
-    const [newColumns, setNewColumns] = useState(defaultColumns);
+    const [newColumns, setNewColumns] = useState<{ [key: string]: any }[]>([]);
+    useEffect(() => {
+        const tempDefaultColumns: { [key: string]: any }[] = [];
+        for (let i = 0; i < inputCount; i++) {
+            tempDefaultColumns.push({
+                destColName: "",
+                sourceColName: [],
+                function: "",
+            });
+        }
+        setNewColumns(tempDefaultColumns);
+    }, [inputCount]);
 
     return (
         <>
@@ -78,10 +86,11 @@ const ColumnSelect: FC<ColumnSelectProps> = ({
                             placeholder="First Name"
                             onChange={(e) => {
                                 const value = e.target.value;
-                                setNewColumns((prevState) => ({
-                                    ...prevState,
-                                    [index]: [value],
-                                }));
+                                setNewColumns((prevState) => {
+                                    let newState = { ...prevState };
+                                    newState[index]["destColName"] = value;
+                                    return newState;
+                                });
                             }}
                         />
                     </div>
@@ -96,39 +105,46 @@ const ColumnSelect: FC<ColumnSelectProps> = ({
                                 name="colors"
                                 options={options}
                                 onChange={(selectedOptions) =>
-                                    setNewColumns((prevState) => ({
-                                        ...prevState,
-                                        [index]: [
-                                            prevState[index][0],
-                                            ...selectedOptions,
-                                        ],
-                                    }))
+                                    setNewColumns((prevState) => {
+                                        let newState = { ...prevState };
+                                        newState[index]["sourceColName"] =
+                                            selectedOptions;
+                                        return newState;
+                                    })
                                 }
                             />
                         </div>
                     </div>
-                    <div className="ml-5 grid w-full max-w-sm items-center gap-1.5 my-4">
-                        <Label>Handle Multiple source:</Label>
-                        <Select
-                            onValueChange={(selectedFunction) =>
-                                console.log(selectedFunction)
-                            }
-                        >
-                            <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="Choose an option" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectItem value="contatinate">
-                                        Contatinate
-                                    </SelectItem>
-                                    <SelectItem value="cuplicate">
-                                        Duplicate data
-                                    </SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </div>
+                    {newColumns[index] &&
+                        newColumns[index]["sourceColName"]?.length > 1 && (
+                            <div className="ml-5 grid w-full max-w-sm items-center gap-1.5 my-4">
+                                <Label>Handle Multiple source:</Label>
+                                <Select
+                                    onValueChange={(selectedFunction) =>
+                                        setNewColumns((prevState) => {
+                                            let newState = { ...prevState };
+                                            newState[index]["function"] =
+                                                selectedFunction;
+                                            return newState;
+                                        })
+                                    }
+                                >
+                                    <SelectTrigger className="w-[180px]">
+                                        <SelectValue placeholder="Choose an option" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectItem value="concatenate">
+                                                Contatinate
+                                            </SelectItem>
+                                            <SelectItem value="duplicate">
+                                                Duplicate data
+                                            </SelectItem>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                        )}
                 </div>
             ))}
             <Button
@@ -136,12 +152,7 @@ const ColumnSelect: FC<ColumnSelectProps> = ({
                 onClick={() => {
                     setInputCount(0);
                     updateIsMapped(true);
-                    prepareDataForOpenAI(
-                        newColumns,
-                        csvData,
-                        addHeaders,
-                        putData
-                    );
+                    prepareDataForOpenAI(newColumns, addHeaders);
                 }}
             >
                 Create Database

@@ -9,8 +9,8 @@ interface IDataStore {
     addHeaders: (header: string) => void;
     data: Data[];
     putData: (newData: Data[]) => void;
-    csvData: Data[];
-    putCsvData: (newData: Data[]) => void;
+    csvData: string;
+    putCsvData: (newData: string) => void;
     IsMapped: boolean;
     updateIsMapped: (mappingStatus: boolean) => void;
 }
@@ -18,7 +18,7 @@ interface IDataStore {
 const useDataStore = create<IDataStore>((set) => ({
     headers: [],
     data: [],
-    csvData: [],
+    csvData: "",
     IsMapped: false,
     addHeaders: (header: string) =>
         set((state) => ({
@@ -28,9 +28,9 @@ const useDataStore = create<IDataStore>((set) => ({
         set(() => ({
             data: [...newData],
         })),
-    putCsvData: (newData: Data[]) =>
+    putCsvData: (newData: string) =>
         set(() => ({
-            csvData: [...newData],
+            csvData: newData,
         })),
     updateIsMapped: (mappingStatus: boolean) =>
         set(() => ({ IsMapped: mappingStatus })),

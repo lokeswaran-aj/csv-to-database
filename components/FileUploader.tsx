@@ -29,12 +29,12 @@ const InputFile = () => {
     };
 
     const parseCSV = (result: string) => {
+        putCsvData(result);
         parse(result, {
             header: true,
             dynamicTyping: true,
             complete: (results: any) => {
                 setCsvDataHeaders(results.meta.fields);
-                putCsvData(results.data);
             },
         });
     };
