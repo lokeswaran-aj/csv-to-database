@@ -97,21 +97,31 @@ const ColumnSelect: FC<ColumnSelectProps> = ({
                             }}
                         />
                     </div>
-                    <Select
-                        form=""
-                        isMulti
-                        name="colors"
-                        options={options}
-                        onChange={(selectedOptions) =>
-                            setNewColumns((prevState) => ({
-                                ...prevState,
-                                [index]: [
-                                    prevState[index][0],
-                                    ...selectedOptions,
-                                ],
-                            }))
-                        }
-                    />
+                    <div className="ml-5">
+                        <Label
+                            htmlFor={`source${index}`}
+                            className="block !pt-4 pb-1"
+                        >
+                            Choose source column:
+                        </Label>
+                        <div>
+                            <Select
+                                id={`source${index}`}
+                                isMulti
+                                name="colors"
+                                options={options}
+                                onChange={(selectedOptions) =>
+                                    setNewColumns((prevState) => ({
+                                        ...prevState,
+                                        [index]: [
+                                            prevState[index][0],
+                                            ...selectedOptions,
+                                        ],
+                                    }))
+                                }
+                            />
+                        </div>
+                    </div>
                 </div>
             ))}
             <Button
