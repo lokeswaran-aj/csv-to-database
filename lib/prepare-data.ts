@@ -5,7 +5,8 @@ const prepareDataForOpenAI = async (
     newColumns: { [key: number]: any },
     addHeaders: (header: string) => void,
     csvData: string,
-    putData: (newData: Data[]) => void
+    putData: (newData: Data[]) => void,
+    updateIsMapped: (mappingStatus: boolean) => void
 ) => {
     var mapping: { [key: string]: string[] } = {};
     for (const index in newColumns) {
@@ -26,8 +27,12 @@ const prepareDataForOpenAI = async (
         }
         mapping[dest] = source;
     }
-    const data = await getJsonData(JSON.stringify(mapping), csvData);
-    putData(data);
+    const data = await getJsonData(
+        JSON.stringify(mapping),
+        csvData,
+        updateIsMapped
+    );
+    if (data) putData(data);
 };
 
 export default prepareDataForOpenAI;

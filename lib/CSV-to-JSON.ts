@@ -1,8 +1,11 @@
 "use server";
-import { throws } from "assert";
 import OpenAI from "openai";
 
-const getJsonData = async (dataStructure: string, csvString: string) => {
+const getJsonData = async (
+    dataStructure: string,
+    csvString: string,
+    updateIsMapped: (mappingStatus: boolean) => void
+) => {
     const apiKey = process.env["OPENAI_API_KEY"];
 
     const openai = new OpenAI({ apiKey: apiKey });
@@ -45,9 +48,10 @@ const getJsonData = async (dataStructure: string, csvString: string) => {
             console.error("Error parsing JSON:", error.message);
         }
     } else {
-        throw new Error(
+        console.error(
             "Proper response was not returned from OpenAI. Retry by uploading again."
         );
+        updateIsMapped(false);
     }
 };
 

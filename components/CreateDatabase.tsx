@@ -19,7 +19,13 @@ const CreateDatabase: FC<CreateDatabaseProps> = ({
             onClick={() => {
                 setInputCount(0);
                 updateIsMapped(true);
-                prepareDataForOpenAI(newColumns, addHeaders, csvData, putData);
+                prepareDataForOpenAI(
+                    newColumns,
+                    addHeaders,
+                    csvData,
+                    putData,
+                    updateIsMapped
+                );
             }}
         >
             Create Database
