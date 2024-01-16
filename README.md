@@ -19,22 +19,22 @@ Follow these simple steps to convert your CSV file to an SQL Database Table (You
 1. Visit the [CSV-to-Database Tool](https://csv-to-database-rogiclwge-curlgpt.vercel.app/).
 
 2. Upload your CSV file to the application. 📂
-   ![choose file](./public/screenshots/choose-file.png)
+   ![choose file](./images/screenshots/choose-file.png)
 
 3. Specify the number of columns you desire in the resulting SQL Table. 🔢
-   ![choose column count](./public/screenshots/choose-column-count.png)
+   ![choose column count](./images/screenshots/choose-column-count.png)
 
 4. For each column, provide a name and select the source column(s) whose values you want to populate in the new SQL Table column.
 
     > Note: Multiple source columns can be chosen from the dropdown menu. 🔄
 
-    ![enter column name](./public/screenshots/column-name.png)
+    ![enter column name](./images/screenshots/column-name.png)
 
 5. Click the **Create Database** button. 🚀
-   ![click create database button](./public/screenshots/create-database.png)
+   ![click create database button](./images/screenshots/create-database.png)
 
 6. Voila! Your SQL Table is ready, populated with data from your CSV file. 🎉
-   ![view your SQL Database Table](./public/screenshots/sql-database.png)
+   ![view your SQL Database Table](./images/screenshots/sql-database.png)
 
 ### Example:
 
