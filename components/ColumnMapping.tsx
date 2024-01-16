@@ -133,7 +133,7 @@ const ColumnSelect: FC<ColumnSelectProps> = ({
                                     <SelectContent>
                                         <SelectGroup>
                                             <SelectItem value="concatenate">
-                                                Contatinate
+                                                Concatenate
                                             </SelectItem>
                                             <SelectItem value="duplicate">
                                                 Duplicate data
