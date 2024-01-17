@@ -16,7 +16,7 @@ const getJsonData = async (dataStructure: string, csvString: string) => {
             {
                 role: "system",
                 content:
-                    "You have 2 rules. Rule-1: duplicate() should create duplicate rows for each source column's value in the CSV. Rules-2: concatenate() method should concatenate the source column values in the CSV.",
+                    "You have 3 rules. Rule-1: duplicate() should create duplicate rows for each source column's value in the CSV. Rules-2: concatenate() method should concatenate the source column values in the CSV. Rule-3: DO NOT omit any data for brevity or for any other reason. Send the full JSON in single response.",
             },
             {
                 role: "user",
@@ -28,6 +28,7 @@ const getJsonData = async (dataStructure: string, csvString: string) => {
             },
         ],
     });
+    console.log("Usage:", completion.usage);
     console.log("Response:", completion.choices[0].message.content);
     if (!completion.choices[0].message.content) return "";
     let response = completion.choices[0].message.content;
