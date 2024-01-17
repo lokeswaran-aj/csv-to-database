@@ -23,12 +23,12 @@ const prepareDataForOpenAI = async (
             const values = source.map((col: string) => col).join(",");
             source = `duplicate(${values})`;
         } else {
-            source = source[0];
+            source = `source${source[0]}`;
         }
         mapping[dest] = source;
     }
     const data = await getJsonData(JSON.stringify(mapping), csvData);
-    if (data) putData(data);
+    if (data && Array.isArray(data)) putData(data);
     else updateIsMapped(false);
 };
 

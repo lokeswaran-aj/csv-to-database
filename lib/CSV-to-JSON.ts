@@ -7,16 +7,17 @@ const getJsonData = async (dataStructure: string, csvString: string) => {
     const openai = new OpenAI({ apiKey: apiKey });
     const completion = await openai.chat.completions.create({
         model: "gpt-3.5-turbo-1106",
+        response_format: { type: "json_object" },
         messages: [
             {
-                role: "system",
+                role: "user",
                 content:
-                    "You are a csv to JSON covering expert. The inputs are a CSV data and a data structure. You have to return the JSON representation of the csv in a minfied/compact format",
+                    "You are a csv to JSON covering expert. The inputs are a CSV data and a data structure. You have to return the JSON representation of the csv in a minfied/compact JSON format",
             },
             {
-                role: "system",
+                role: "user",
                 content:
-                    "You have 3 rules. Rule-1: duplicate() should create duplicate rows for each source column's value in the CSV. Rules-2: concatenate() method should concatenate the source column values in the CSV. Rule-3: DO NOT omit any data for brevity or for any other reason. Send the full JSON in single response.",
+                    "You have 4 rules. Rule-1: duplicate() should create duplicate rows for each source column's value in the CSV. Rule-2: concatenate() method should concatenate the source column values in the CSV. Rule-3: source() method should only use the given column to populate in the csv. Rule-4: DO NOT omit any data for brevity or for any other reason. Send the full JSON in single response.",
             },
             {
                 role: "user",
@@ -29,25 +30,13 @@ const getJsonData = async (dataStructure: string, csvString: string) => {
         ],
     });
     console.log("Usage:", completion.usage);
+    console.log("Finish reason:", completion.choices[0].finish_reason);
     console.log("Response:", completion.choices[0].message.content);
     if (!completion.choices[0].message.content) return "";
     let response = completion.choices[0].message.content;
 
-    let matchFound =
-        response.match(/"data":\s*(\[[\s\S]*?\])/) ||
-        response.match(/```json\s*([\s\S]+?)\s*```/) ||
-        response.match(/```\s*([\s\S]+?)\s*```/);
-    if (matchFound) response = matchFound[0];
-
-    const jsonObjectRegex = /{[^{}]*}/g;
-
-    let match;
-    const jsonArray = [];
-
-    while ((match = jsonObjectRegex.exec(response)) !== null) {
-        jsonArray.push(JSON.parse(match[0]));
-    }
-    return jsonArray;
+    const jsonResponse = JSON.parse(response);
+    return Object.values(jsonResponse)[0];
 };
 
 export default getJsonData;
