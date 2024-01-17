@@ -1,5 +1,83 @@
 First Name,Last Name,Class 1,Class 2,School,Location
-John,Doe,History,Math,University A,City A
-Jane,Smith,Physics,Chemistry,College B,City B
-Mike,Johnson,English,Biology,"High, School C",City C
-Sara,Miller,Geography,Computer Science,College D,City D
+John,Doe,History,Math,Harvard University,Boston
+Jane,Smith,Physics,Chemistry,Stanford University,Palo Alto
+Mike,Johnson,English,Biology,University of Chicago,Chicago
+Sara,Miller,Geography,Computer Science,University of California, Berkeley
+David,Williams,Math,Physics,Massachusetts Institute of Technology,Cambridge
+Emily,Brown,Chemistry,Biology,Columbia University,New York City
+Daniel,Clark,Computer Science,English,University of Illinois at Urbana-Champaign,Urbana
+Olivia,Anderson,History,Geography,University of Michigan,Ann Arbor
+Ethan,Moore,Physics,Math,Princeton University,Princeton
+Grace,Walker,Biology,Chemistry,University of Pennsylvania,Philadelphia
+Ryan,Hill,English,Computer Science,University of Texas at Austin,Austin
+Sophia,Ward,History,Math,Yale University,New Haven
+Aiden,Martin,Physics,Chemistry,University of Florida,Gainesville
+Emma,Watson,English,Biology,University of California, Los Angeles
+Liam,Collins,Geography,Computer Science,University of Washington,Seattle
+Ava,Turner,Math,Physics,University of Virginia,Charlottesville
+Logan,Reed,Chemistry,Biology,University of North Carolina at Chapel Hill,Chapel Hill
+Mia,Cook,History,Computer Science,University of Wisconsin-Madison,Madison
+Noah,Ross,Biology,Math,University of Georgia,Athens
+Isabella,Hughes,Physics,English,University of California, San Diego
+James,Fisher,Chemistry,Geography,University of Maryland,College Park
+Amelia,Ward,Math,History,University of Minnesota,Minneapolis
+Benjamin,Murphy,Computer Science,Biology,University of Arizona,Tucson
+Chloe,Perry,Physics,Chemistry,University of California, Irvine
+Daniel,Richardson,English,Math,University of Colorado Boulder,Boulder
+Evelyn,Sanders,Geography,Computer Science,University of Pittsburgh,Pittsburgh
+Jack,Adams,History,Biology,University of Oregon,Eugene
+Olivia,Kelly,Physics,Chemistry,University of Virginia,Charlottesville
+Liam,Washington,English,Computer Science,University of Miami,Miami
+Sophia,Simmons,Biology,Math,University of Tennessee,Knoxville
+Logan,Fisher,Chemistry,History,University of Alabama,Tuscaloosa
+Ava,Cooper,Computer Science,Geography,University of Massachusetts Amherst,Amherst
+Lucas,Collins,Physics,English,University of Iowa,Iowa City
+Ella,Martin,Math,Biology,University of Utah,Salt Lake City
+Jackson,Ward,History,Computer Science,University of Kentucky,Lexington
+Scarlett,Murphy,Chemistry,Physics,University of South Carolina,Columbia
+Henry,Adams,Biology,Chemistry,University of Cincinnati,Cincinnati
+Penelope,Richardson,English,Math,University of Arkansas,Fayetteville
+Daniel,Hamilton,Geography,History,University of Oklahoma,Norman
+Aria,Sanders,Physics,Computer Science,University of Connecticut,Storrs
+Sebastian,Turner,Math,Biology,University of Mississippi,Oxford
+Madison,Cook,Chemistry,English,University of South Florida,Tampa
+Carter,Perry,Computer Science,Geography,University of Hawaii at Manoa,Honolulu
+Eleanor,Richardson,History,Physics,University of Nebraska-Lincoln,Lincoln
+Gabriel,Watson,English,Math,University of Kansas,Lawrence
+Layla,Martin,Chemistry,Biology,University of New Mexico,Albuquerque
+Elijah,Ward,Geography,Computer Science,University of Nevada, Las Vegas
+Stella,Collins,Physics,Chemistry,University of Maine,Orono
+Leo,Sanders,Math,English,University of Idaho,Moscow
+Aubrey,Turner,Biology,History,University of Wyoming,Laramie
+Julian,Murphy,Computer Science,Physics,University of Montana,Missoula
+Hazel,Hamilton,Chemistry,Math,University of South Dakota,Vermillion
+Adrian,Cook,English,Biology,University of North Dakota,Grand Forks
+Mila,Perry,Geography,Computer Science,University of Alaska Fairbanks,Fairbanks
+Lucy,Richardson,History,Chemistry,University of Vermont,Burlington
+Owen,Watson,Physics,Math,University of Rhode Island,Kingston
+Nora,Martin,Biology,English,University of New Hampshire,Durham
+Eli,Adams,Computer Science,Geography,University of Delaware,Newark
+Aurora,Sanders,Physics,Chemistry,University of North Carolina Wilmington,Wilmington
+Caleb,Ward,Math,History,University of Hawaii at Hilo,Hilo
+Violet,Turner,English,Biology,University of Alaska Anchorage,Anchorage
+Brayden,Murphy,Geography,Computer Science,University of Puerto Rico,Rio Piedras
+Elena,Perry,History,Physics,University of Guam,Mangilao
+Levi,Cook,Chemistry,Math,University of the Virgin Islands,Charlotte Amalie
+Zoe,Hamilton,Computer Science,English,University of Northern Mariana Islands,Saipan
+Miles,Richardson,Biology,Geography,University of American Samoa,Pago Pago
+Luna,Watson,Physics,Chemistry,University of the District of Columbia,"Washington, D.C."
+Eliana,Martin,Math,History,University of the Virgin Islands,St. Thomas
+Gavin,Adams,English,Biology,University of Puerto Rico,Mayagüez
+Avery,Sanders,Computer Science,Geography,University of Guam,Mangilao
+Eva,Cook,History,Physics,University of Alaska Anchorage,Anchorage
+Isaac,Ward,Chemistry,Math,University of Hawaii at Hilo,Hilo
+Aria,Turner,English,Biology,University of Alaska Fairbanks,Fairbanks
+Caden,Murphy,Geography,Computer Science,University of Northern Mariana Islands,Saipan
+Natalie,Perry,Physics,Chemistry,University of the Virgin Islands,St. Croix
+Brody,Hamilton,Math,History,University of American Samoa,Pago Pago
+Zara,Richardson,Biology,Geography,University of the District of Columbia,"Washington, D.C."
+Colton,Watson,Computer Science,English,University of Puerto Rico,Mayagüez
+Athena,Martin,History,Physics,University of Guam,Mangilao
+Axel,Adams,Chemistry,Math,University of the Virgin Islands,St. Thomas
+Lila,Sanders,English,Biology,University of Alaska Anchorage,Anchorage
+Hudson
