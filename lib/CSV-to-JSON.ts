@@ -6,12 +6,12 @@ const getJsonData = async (dataStructure: string, csvString: string) => {
 
     const openai = new OpenAI({ apiKey: apiKey });
     const completion = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
+        model: "gpt-3.5-turbo-1106",
         messages: [
             {
                 role: "system",
                 content:
-                    "You are a csv to JSON covering expert. The inputs are a CSV data and a data structure. You have to return the JSON representation of the csv within ```json``` string.",
+                    "You are a csv to JSON covering expert. The inputs are a CSV data and a data structure. You have to return the JSON representation of the csv in a minfied/compact format",
             },
             {
                 role: "system",
@@ -30,13 +30,13 @@ const getJsonData = async (dataStructure: string, csvString: string) => {
     });
     console.log("Response:", completion.choices[0].message.content);
     if (!completion.choices[0].message.content) return "";
-    const response = completion.choices[0].message.content;
+    let response = completion.choices[0].message.content;
 
     let matchFound =
+        response.match(/"data":\s*(\[[\s\S]*?\])/) ||
         response.match(/```json\s*([\s\S]+?)\s*```/) ||
-        response.match(/```\s*([\s\S]+?)\s*```/) ||
-        response.match(/"data":\s*(\[[\s\S]*?\])/);
-    if (matchFound) return JSON.parse(matchFound[1]);
+        response.match(/```\s*([\s\S]+?)\s*```/);
+    if (matchFound) response = matchFound[0];
 
     const jsonObjectRegex = /{[^{}]*}/g;
 
