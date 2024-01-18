@@ -39,6 +39,7 @@ const getJsonData = async (dataStructure: string, csvString: string) => {
         const jsonResponse = JSON.parse(response);
         return Object.values(jsonResponse)[0];
     } catch (error: any) {
+        console.error(error.message);
         throw new Error("Failed to process CSV data. Please try again.");
     }
 };
