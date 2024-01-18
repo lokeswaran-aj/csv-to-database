@@ -31,9 +31,12 @@ const prepareDataForOpenAI = async (
     try {
         const data = await getJsonData(JSON.stringify(mapping), csvData);
         if (data && Array.isArray(data)) putData(data);
+        else {
+            updateIsMapped(false);
+            throw new Error("Failed to process CSV data. Please try again.");
+        }
     } catch (error: any) {
         addErrors((error as Error).message);
-    } finally {
         updateIsMapped(false);
     }
 };

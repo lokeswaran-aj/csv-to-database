@@ -6,7 +6,7 @@ const getJsonData = async (dataStructure: string, csvString: string) => {
         const apiKey = process.env["OPENAI_API_KEY"];
         const openai = new OpenAI({ apiKey: apiKey });
         const completion = await openai.chat.completions.create({
-            model: "gpt-3.5-turbo-16k",
+            model: "gpt-3.5-turbo-1106",
             response_format: { type: "json_object" },
             messages: [
                 {
