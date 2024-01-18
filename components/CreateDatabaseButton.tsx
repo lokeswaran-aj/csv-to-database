@@ -12,24 +12,26 @@ const CreateDatabaseButton: FC<CreateDatabaseButtonProps> = ({
     setInputCount,
     newColumns,
 }) => {
-    const { addHeaders, putData, updateIsMapped, csvData } = useDataStore();
+    const { addHeaders, putData, updateIsMapped, csvData, addErrors } =
+        useDataStore();
+    const handleClick = () => {
+        setInputCount(undefined);
+        updateIsMapped(true);
+        prepareDataForOpenAI(
+            newColumns,
+            addHeaders,
+            csvData,
+            putData,
+            updateIsMapped,
+            addErrors
+        );
+    };
     return (
-        <Button
-            variant="default"
-            onClick={() => {
-                setInputCount(undefined);
-                updateIsMapped(true);
-                prepareDataForOpenAI(
-                    newColumns,
-                    addHeaders,
-                    csvData,
-                    putData,
-                    updateIsMapped
-                );
-            }}
-        >
-            Create Database
-        </Button>
+        <>
+            <Button variant="default" onClick={handleClick}>
+                Create Database
+            </Button>
+        </>
     );
 };
 

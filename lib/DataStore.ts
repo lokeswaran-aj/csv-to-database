@@ -13,6 +13,8 @@ interface IDataStore {
     putCsvData: (newData: string) => void;
     IsMapped: boolean;
     updateIsMapped: (mappingStatus: boolean) => void;
+    errors: string | null;
+    addErrors: (message: string | null) => void;
 }
 
 const useDataStore = create<IDataStore>((set) => ({
@@ -20,6 +22,7 @@ const useDataStore = create<IDataStore>((set) => ({
     data: [],
     csvData: "",
     IsMapped: false,
+    errors: null,
     addHeaders: (header: string) =>
         set((state) => ({
             headers: [...state.headers, header],
@@ -34,6 +37,10 @@ const useDataStore = create<IDataStore>((set) => ({
         })),
     updateIsMapped: (mappingStatus: boolean) =>
         set(() => ({ IsMapped: mappingStatus })),
+    addErrors: (message: string | null) =>
+        set(() => ({
+            errors: message,
+        })),
 }));
 
 export default useDataStore;
