@@ -1,5 +1,13 @@
 "use client";
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import {
+    Dispatch,
+    FC,
+    SetStateAction,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import MultiSelect from "react-select";
@@ -12,53 +20,72 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import CreateDatabase from "./CreateDatabase";
+import CreateDatabaseButton from "./CreateDatabaseButton";
 
 interface ColumnMappingProps {
     columns: string[];
 }
-interface ColumnSelectProps {
+interface ColumnFormProps {
     columns: string[];
     inputCount: number;
-    setInputCount: Dispatch<SetStateAction<number>>;
+    setInputCount: Dispatch<SetStateAction<number | undefined>>;
 }
 
 const ColumnMapping: FC<ColumnMappingProps> = ({ columns }) => {
-    const [inputCount, setInputCount] = useState<number>(0);
+    const [inputCount, setInputCount] = useState<number | undefined>(undefined);
+    const [errorMessage, setErrorMessage] = useState("");
+    const handleInputChange = (e: { target: { value: string } }) => {
+        const inputValue = parseInt(e.target.value, 10);
+
+        if (!isNaN(inputValue) && inputValue >= 1) {
+            setInputCount(inputValue);
+            setErrorMessage("");
+        } else {
+            setInputCount(undefined);
+            setErrorMessage("The number must be greater than 1.");
+        }
+    };
 
     return (
         <>
             <div className="grid w-full max-w-sm items-center gap-1.5 my-4">
-                <Label htmlFor="columnCount">Ener the number of columns</Label>
+                <Label htmlFor="columnCount">Enter the number of columns</Label>
                 <Input
                     type="number"
                     id="columnCount"
-                    placeholder="10"
-                    min={0}
+                    placeholder="5"
+                    min={1}
                     max={columns.length}
-                    onChange={(e) => {
-                        e.target.value.length > 0 &&
-                            setInputCount(e.target.valueAsNumber);
-                    }}
+                    value={inputCount === undefined ? "" : inputCount}
+                    onChange={handleInputChange}
                 />
+                {errorMessage && (
+                    <span className="text-red-500">{errorMessage}</span>
+                )}
             </div>
-            <ColumnSelect
-                inputCount={inputCount}
-                columns={columns}
-                setInputCount={setInputCount}
-            />
+            {inputCount !== undefined && (
+                <ColumnForm
+                    inputCount={inputCount}
+                    columns={columns}
+                    setInputCount={setInputCount}
+                />
+            )}
         </>
     );
 };
 
-const ColumnSelect: FC<ColumnSelectProps> = ({
+const ColumnForm: FC<ColumnFormProps> = ({
     columns,
     inputCount,
     setInputCount,
 }) => {
-    const options = columns.map((column) => ({ label: column, value: column }));
+    const options = useMemo(
+        () => columns.map((column) => ({ label: column, value: column })),
+        [columns]
+    );
     const [newColumns, setNewColumns] = useState<{ [key: string]: any }[]>([]);
-    useEffect(() => {
+
+    const createDefaultColumns = useCallback(() => {
         const tempDefaultColumns: { [key: string]: any }[] = [];
         for (let i = 0; i < inputCount; i++) {
             tempDefaultColumns.push({
@@ -70,28 +97,62 @@ const ColumnSelect: FC<ColumnSelectProps> = ({
         setNewColumns(tempDefaultColumns);
     }, [inputCount]);
 
+    const handleDestColNameChange = (index: number, value: string) => {
+        setNewColumns((prevState) => {
+            const newState = [...prevState];
+            newState[index].destColName = value;
+            return newState;
+        });
+    };
+
+    const handleSourceColNameChange = (
+        index: number,
+        selectedOptions: string[]
+    ) => {
+        setNewColumns((prevState) => {
+            const newState = [...prevState];
+            newState[index].sourceColName = selectedOptions;
+            return newState;
+        });
+        if (selectedOptions.length < 2)
+            setNewColumns((prevState) => {
+                const newState = [...prevState];
+                newState[index].function = "";
+                return newState;
+            });
+    };
+
+    const handleFunctionChange = (index: number, selectedFunction: string) => {
+        setNewColumns((prevState) => {
+            const newState = [...prevState];
+            newState[index].function = selectedFunction;
+            return newState;
+        });
+    };
+
+    useEffect(() => {
+        createDefaultColumns();
+    }, [createDefaultColumns]);
+
     return (
         <>
             {[...Array(inputCount)].map((_, index) => (
                 <div className="flex" key={index}>
                     <div className="grid w-full max-w-sm items-center gap-1.5 my-4">
-                        <Label htmlFor={`columnn${index}`}>
+                        <Label htmlFor={`column${index}`}>
                             Enter the name of column {index + 1}
                         </Label>
                         <Input
                             type="text"
-                            id={`columnn${index}`}
+                            id={`column${index}`}
                             placeholder="First Name"
-                            onChange={(e) => {
-                                const value = e.target.value;
-                                setNewColumns((prevState) => {
-                                    let newState = { ...prevState };
-                                    newState[index]["destColName"] = value;
-                                    return newState;
-                                });
-                            }}
+                            onChange={(e) =>
+                                handleDestColNameChange(index, e.target.value)
+                            }
+                            value={newColumns[index]?.destColName || ""}
                         />
                     </div>
+
                     <div className="ml-5 grid w-full max-w-sm items-center gap-1.5 my-4">
                         <Label htmlFor={`source${index}`}>
                             Choose source column:
@@ -103,53 +164,52 @@ const ColumnSelect: FC<ColumnSelectProps> = ({
                                 name="colors"
                                 options={options}
                                 onChange={(selectedOptions) =>
-                                    setNewColumns((prevState) => {
-                                        let newState = { ...prevState };
-                                        newState[index]["sourceColName"] =
-                                            selectedOptions;
-                                        return newState;
-                                    })
+                                    handleSourceColNameChange(index, [
+                                        ...selectedOptions,
+                                    ])
                                 }
+                                value={newColumns[index]?.sourceColName || []}
                             />
                         </div>
                     </div>
-                    {newColumns[index] &&
-                        newColumns[index]["sourceColName"]?.length > 1 && (
-                            <div className="ml-5 grid w-full max-w-sm items-center gap-1.5 my-4">
-                                <Label>Handle Multiple source:</Label>
-                                <Select
-                                    onValueChange={(selectedFunction) =>
-                                        setNewColumns((prevState) => {
-                                            let newState = { ...prevState };
-                                            newState[index]["function"] =
-                                                selectedFunction;
-                                            return newState;
-                                        })
-                                    }
-                                >
-                                    <SelectTrigger className="w-[180px]">
-                                        <SelectValue placeholder="Choose an option" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            <SelectItem value="concatenate">
-                                                Concatenate
-                                            </SelectItem>
-                                            <SelectItem value="duplicate">
-                                                Duplicate data
-                                            </SelectItem>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        )}
+
+                    {newColumns[index]?.sourceColName?.length > 1 && (
+                        <div className="ml-5 grid w-full max-w-sm items-center gap-1.5 my-4">
+                            <Label>Handle Multiple source:</Label>
+                            <Select
+                                onValueChange={(selectedFunction) =>
+                                    handleFunctionChange(
+                                        index,
+                                        selectedFunction
+                                    )
+                                }
+                                defaultValue={undefined}
+                                value={newColumns[index]?.function || ""}
+                            >
+                                <SelectTrigger className="w-[180px]">
+                                    <SelectValue placeholder="Choose an option" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="concatenate">
+                                            Concatenate
+                                        </SelectItem>
+                                        <SelectItem value="duplicate">
+                                            Duplicate data
+                                        </SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    )}
                 </div>
             ))}
-            <CreateDatabase
+            <CreateDatabaseButton
                 setInputCount={setInputCount}
                 newColumns={newColumns}
             />
         </>
     );
 };
+
 export default ColumnMapping;

@@ -3,12 +3,12 @@ import { Button } from "./ui/button";
 import prepareDataForOpenAI from "@/lib/prepare-data";
 import useDataStore from "@/lib/DataStore";
 
-interface CreateDatabaseProps {
-    setInputCount: Dispatch<SetStateAction<number>>;
+interface CreateDatabaseButtonProps {
+    setInputCount: Dispatch<SetStateAction<number | undefined>>;
     newColumns: { [key: string]: any }[];
 }
 
-const CreateDatabase: FC<CreateDatabaseProps> = ({
+const CreateDatabaseButton: FC<CreateDatabaseButtonProps> = ({
     setInputCount,
     newColumns,
 }) => {
@@ -17,7 +17,7 @@ const CreateDatabase: FC<CreateDatabaseProps> = ({
         <Button
             variant="default"
             onClick={() => {
-                setInputCount(0);
+                setInputCount(undefined);
                 updateIsMapped(true);
                 prepareDataForOpenAI(
                     newColumns,
@@ -33,4 +33,4 @@ const CreateDatabase: FC<CreateDatabaseProps> = ({
     );
 };
 
-export default CreateDatabase;
+export default CreateDatabaseButton;
