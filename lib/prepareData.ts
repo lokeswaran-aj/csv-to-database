@@ -1,4 +1,4 @@
-import getJsonData from "./CSV-to-JSON";
+import getJsonData from "./csvToJSON";
 import { Data } from "./DataStore";
 
 const prepareDataForOpenAI = async (

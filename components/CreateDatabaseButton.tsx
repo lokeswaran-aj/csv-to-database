@@ -1,6 +1,6 @@
 import { Dispatch, FC, SetStateAction } from "react";
 import { Button } from "./ui/button";
-import prepareDataForOpenAI from "@/lib/prepare-data";
+import prepareDataForOpenAI from "@/lib/prepareData";
 import useDataStore from "@/lib/DataStore";
 
 interface CreateDatabaseButtonProps {
